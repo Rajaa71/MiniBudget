@@ -2,28 +2,32 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main]  # Déclenche le workflow à chaque push sur la branche main
+
+permissions:
+  contents: write     # Nécessaire pour publier sur gh-pages
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: 🔁 Cloner le dépôt
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: 🧰 Configurer Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20  # Compatible avec React 19
 
-      - name: Install dependencies
+      - name: 📦 Installer les dépendances
         run: npm install
 
-      - name: Build the app
+      - name: 🏗️ Construire l’application
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: 🚀 Déployer sur GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages       # Branche cible (elle sera créée automatiquement)
-          folder: dist           # Dossier de sortie de build (par défaut pour Vite)
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
