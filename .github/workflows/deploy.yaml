@@ -13,21 +13,32 @@ jobs:
 
     steps:
       - name: 🔁 Cloner le dépôt
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Utilise la dernière version de checkout
 
       - name: 🧰 Configurer Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20  # Compatible avec React 19
+          cache: 'npm'      # Mise en cache des dépendances pour accélérer
 
       - name: 📦 Installer les dépendances
-        run: npm install
+        run: npm ci  # Utilise npm ci pour une installation reproductible
 
       - name: 🏗️ Construire l’application
-        run: npm run build
+        run: npm run build --verbose
+        env:
+          CI: true  # Active le mode CI pour des erreurs plus explicites
 
       - name: 🚀 Déployer sur GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./dist  # Ajustez à ./build si vous utilisez Create React App
+
+      - name: 📝 Post Configurer Node.js
+        if: always()  # Exécute cette étape même en cas d'échec
+        run: echo "Déploiement terminé"
+
+      - name: 🔄 Post Cloner le dépôt
+        if: always()
+        run: echo "Nettoyage terminé"
