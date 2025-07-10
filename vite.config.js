@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base:'/MiniBudget/',
+  base:'/',
   test: { // Section pour Vitest 
     environment:'jsdom',
   globals: true, //Permet d'utiliser des fonctions globales comme 'describe', 'it', 'expect'
