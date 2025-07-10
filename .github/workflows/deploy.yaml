@@ -2,30 +2,28 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main  # déploie à chaque push sur main
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
-      - name: setup Node.js
-        uses: actions/setup-Node@v3
-        with:
-          node-version: '18'
 
-      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
       - name: Install dependencies
         run: npm install
 
-      - name: Build
+      - name: Build the app
         run: npm run build
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          branch: gh-pages       # Branche cible (elle sera créée automatiquement)
+          folder: dist           # Dossier de sortie de build (par défaut pour Vite)
