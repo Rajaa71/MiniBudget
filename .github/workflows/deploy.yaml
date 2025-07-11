@@ -1,27 +1,33 @@
-name: CI - Tests React Vitest
+name: 🚀 Déploiement Vite sur GitHub Pages
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+
+permissions:
+  contents: write
 
 jobs:
-  test:
-    name: 🔎 Lancer les tests
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📁 Cloner le dépôt
+      - name: 🧾 Cloner le dépôt
         uses: actions/checkout@v3
 
       - name: ⚙️ Installer Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # ou 20 si tu préfères
+          node-version: '18'
 
       - name: 📦 Installer les dépendances
         run: npm install
 
-      - name: 🧪 Lancer les tests avec Vitest
-        run: npm run test
+      - name: 🛠️ Compiler le projet Vite
+        run: npm run build
+
+      - name: 🚀 Déployer sur GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
