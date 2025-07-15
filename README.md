@@ -1,12 +1,51 @@
-# React + Vite
+#  MiniBudget (petit définition)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+MiniBudget est une application web simple pour gérer vos dépenses personnelles.  
+Elle permet d'ajouter, visualiser et analyser les dépenses par catégorie via un graphique.
 
-Currently, two official plugins are available:
+---
+## Fonctionnalités
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Ajouter une dépense (montant, catégorie, date, commentaire facultatif).
+- Visualiser la liste chronologique des dépenses.
+- Consulter un récapitulatif graphique (dépenses par catégorie).
+- Conserver les données localement dans le navigateur (localStorage).
+- Tests unitaires sur les composants avec Vitest.
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Démo en ligne 
+
+[ Pour voir la démo en ligne](https://Rajaa71.github.io/MiniBudget/)  
+
+
+---
+
+## Technologies utilisées
+
+- React 19 + Vite 
+- Hooks React (useState / useEffect)
+- LocalStorage 
+- Tailwind CSS
+- Chart.js (react-chartjs-2)
+- Vitest + React Testing Library
+- Github Actions pour CI/CD
+- Github Pages pour le déploiement
+
+---
+
+## Aperçu
+
+[Aperçu MiniBudget](./screenshot.png) <!-- Tu peux remplacer par un vrai lien vers une image -->
+
+---
+
+## Installation
+
+"bash": 
+git clone https://github.com/Rajaa71/MiniBudget.git
+cd MiniBudget
+npm install
+npm run dev
+
+"Pour lancer les tests":
+npm run test
