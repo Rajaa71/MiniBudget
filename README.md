@@ -26,9 +26,6 @@ Elle permet d'ajouter, visualiser et analyser les dépenses par catégorie via u
 - Github Actions pour CI/CD à chaque fois un push sur main.
 - Github Pages pour le déploiement avec la branche (gh-pages).
 
-## Aperçu
-
-[Aperçu MiniBudget](./screenshot.png) <!-- Tu peux remplacer par un vrai lien vers une image -->
 
 ## Installation
 

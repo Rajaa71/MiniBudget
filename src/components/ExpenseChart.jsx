@@ -42,7 +42,9 @@ const ExpenseChart = ({ expenses }) => {
       {Object.keys(categoryTotals).length === 0 ? (
         <p className="text-gray-500">Aucune donnée à afficher.</p>
       ) : (
+        <div className="w-80 h-80 mx-auto">
         <Doughnut data={data} />
+        </div>
       )}
     </div>
   );
