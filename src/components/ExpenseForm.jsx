@@ -1,99 +1,75 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-const ExpenseForm = ({ onAdd }) => {
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('');
-  const [date, setDate] = useState('');
-  const [comment, setComment] = useState('');
+export default function ExpenseForm({ onAddExpense }) {
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState("");
+  const [comment, setComment] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!amount || !category || !date) {
-      alert('Veuillez remplir tous les champs obligatoires.');
+    if (!title || !amount || !date) {
+      alert("Veuillez remplir tous les champs obligatoires (Catégorie, Montant, Date)");
       return;
     }
 
     const newExpense = {
+      id: Date.now(),
+      category: title,            // IMPORTANT : correspond à category attendu par ExpenseChart
       amount: parseFloat(amount),
-      category,
-      date,
+      date: new Date(date).toLocaleDateString(), // format lisible en liste
       comment,
     };
 
-    onAdd(newExpense);
-    setAmount('');
-    setCategory('');
-    setDate('');
-    setComment('');
+    onAddExpense(newExpense);
+
+    // Réinitialiser les champs
+    setTitle("");
+    setAmount("");
+    setDate("");
+    setComment("");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded-xl shadow-md mb-6">
-      <h2 className="text-xl font-semibold mb-4">Ajouter une dépense</h2>
-
-      <div className="mb-3">
-        <label htmlFor="amount" className="block font-medium">Montant *</label>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <input
-          id="amount"
           type="number"
-          step="0.01"
-          className="w-full p-2 border rounded"
+          placeholder="Montant"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          required
+          className="border px-4 py-2 rounded-lg w-full"
+          min="0"
+          step="0.01"
         />
-      </div>
-
-      <div className="mb-3">
-        <label htmlFor="category" className="block font-medium">Catégorie *</label>
-        <select
-          id="category"
-          className="w-full p-2 border rounded"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          required
-        >
-          <option value="">Choisir une catégorie</option>
-          <option>Alimentation</option>
-          <option>Transport</option>
-          <option>Loisirs</option>
-          <option>Santé</option>
-          <option>Autre</option>
-        </select>
-      </div>
-
-      <div className="mb-3">
-        <label htmlFor="date" className="block font-medium">Date *</label>
         <input
-          id="date"
+          type="text"
+          placeholder="Catégorie"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="border px-4 py-2 rounded-lg w-full"
+        />
+        <input
           type="date"
-          className="w-full p-2 border rounded"
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          required
+          className="border px-4 py-2 rounded-lg w-full"
         />
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="comment" className="block font-medium">Commentaire</label>
         <input
-          id="comment"
           type="text"
-          className="w-full p-2 border rounded"
+          placeholder="Commentaire"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
+          className="border px-4 py-2 rounded-lg w-full"
         />
       </div>
-
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
       >
         Ajouter
       </button>
     </form>
   );
-};
-
-export default ExpenseForm;
+}

@@ -1,36 +1,26 @@
-const ExpenseList = ({ expenses }) => {
+export default function ExpenseList({ expenses }) {
   if (expenses.length === 0) {
-    return (
-      <div className="text-center text-gray-500">
-        Aucune dépense enregistrée.
-      </div>
-    );
+    return <p className="text-gray-500">Aucune dépense ajoutée.</p>;
   }
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Liste des dépenses</h2>
-
-      <ul className="divide-y divide-gray-200">
-        {expenses.map((expense, index) => (
-          <li key={index} className="py-3">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="font-medium text-lg text-gray-800">
-                  {expense.amount.toFixed(2)} DH
-                </p>
-                <p className="text-sm text-gray-600">{expense.category}</p>
-                <p className="text-sm text-gray-500">{expense.date}</p>
-                {expense.comment && (
-                  <p className="text-sm italic text-gray-400">"{expense.comment}"</p>
-                )}
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul className="space-y-2">
+      {expenses.map((expense) => (
+        <li
+          key={expense.id}
+          className="border p-4 rounded-lg flex justify-between items-center"
+        >
+          <div>
+            <h2 className="text-xl font-semibold mb-4">La liste des dépenses</h2>
+            <h3 className="font-semibold">{expense.category}</h3>
+            <p className="text-sm text-gray-600">{expense.date}</p>
+            {expense.comment && (
+              <p className="text-sm italic text-gray-500">{expense.comment}</p>
+            )}
+          </div>
+          <span className="font-bold text-blue-700">{expense.amount} MAD</span>
+        </li>
+      ))}
+    </ul>
   );
-};
-
-export default ExpenseList;
+}

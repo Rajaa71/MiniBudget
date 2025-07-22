@@ -1,41 +1,62 @@
-import { useState, useEffect } from 'react';
-import ExpenseForm from './components/ExpenseForm';
-import ExpenseList from './components/ExpenseList';
-import ExpenseChart from './components/ExpenseChart';
-import './index.css'; // Assure-toi que Tailwind est bien importé ici
+import { useState, useCallback, useEffect } from "react";
+import ExpenseForm from "./components/ExpenseForm";
+import ExpenseList from "./components/ExpenseList";
+import ExpenseChart from "./components/ExpenseChart";
+import Login from "./components/Login";
+import "./index.css";
 
 function App() {
-  const [expenses, setExpenses] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [expenses, setExpenses] = useState(() => {
+    const savedExpenses = localStorage.getItem("expenses");
+    return savedExpenses ? JSON.parse(savedExpenses) : [];
+  });
 
-  // Charger les données depuis localStorage au démarrage
+  // Sauvegarder les dépenses dans localStorage quand elles changent
   useEffect(() => {
-    const stored = localStorage.getItem('expenses');
-    if (stored) {
-      setExpenses(JSON.parse(stored));
-    }
-  }, []);
-
-  // Sauvegarder les données dans localStorage à chaque mise à jour
-  useEffect(() => {
-    localStorage.setItem('expenses', JSON.stringify(expenses));
+    localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
 
-  // Ajouter une nouvelle dépense
-  const addExpense = (expense) => {
-    setExpenses((prev) => [...prev, expense]);
+  const handleAddExpense = useCallback((expense) => {
+    setExpenses((prevExpenses) => [...prevExpenses, expense]);
+  }, []);
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setExpenses([]);
+    localStorage.removeItem("expenses");
   };
 
-  return (
-    <div className="min-h-screen bg-gray-200 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-5xl font-bold text-center mb-6 text-blue-700">
-          MiniBudget
-        </h1>
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
 
-        <ExpenseForm onAdd={addExpense} />
-        <ExpenseList expenses={expenses} />
-        <ExpenseChart expenses={expenses} />
-      </div>
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
+      <header className="w-full max-w-3xl flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-blue-700">MiniBudget</h1>
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition"
+          aria-label="Se déconnecter"
+        >
+          Déconnexion
+        </button>
+      </header>
+
+      <main className="w-full max-w-3xl bg-white p-6 rounded-2xl shadow-lg space-y-6">
+        <ExpenseForm onAddExpense={handleAddExpense} />
+        {expenses.length === 0 ? (
+          <p className="text-center text-gray-500 italic">
+            Aucune dépense ajoutée pour le moment.
+          </p>
+        ) : (
+          <>
+            <ExpenseList expenses={expenses} />
+            <ExpenseChart expenses={expenses} />
+          </>
+        )}
+      </main>
     </div>
   );
 }

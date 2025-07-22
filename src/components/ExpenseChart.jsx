@@ -6,7 +6,6 @@ import {
   Legend,
 } from 'chart.js';
 
-// Enregistrement des éléments de Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ExpenseChart = ({ expenses }) => {
@@ -20,7 +19,7 @@ const ExpenseChart = ({ expenses }) => {
     labels: Object.keys(categoryTotals),
     datasets: [
       {
-        label: 'Total des dépenses (DH)',
+        label: 'Total des dépenses (MAD)',
         data: Object.values(categoryTotals),
         backgroundColor: [
           '#4F46E5', // Indigo
@@ -43,7 +42,7 @@ const ExpenseChart = ({ expenses }) => {
         <p className="text-gray-500">Aucune donnée à afficher.</p>
       ) : (
         <div className="w-80 h-80 mx-auto">
-        <Doughnut data={data} />
+          <Doughnut data={data} />
         </div>
       )}
     </div>
