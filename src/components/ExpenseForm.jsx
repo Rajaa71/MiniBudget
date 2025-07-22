@@ -6,6 +6,8 @@ export default function ExpenseForm({ onAddExpense }) {
   const [date, setDate] = useState("");
   const [comment, setComment] = useState("");
 
+  const categories = ["Alimentation", "Transport", "Loisirs", "Santé", "Autres"];
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -16,15 +18,14 @@ export default function ExpenseForm({ onAddExpense }) {
 
     const newExpense = {
       id: Date.now(),
-      category: title,            // IMPORTANT : correspond à category attendu par ExpenseChart
+      category: title,
       amount: parseFloat(amount),
-      date: new Date(date).toLocaleDateString(), // format lisible en liste
+      date: new Date(date).toLocaleDateString(),
       comment,
     };
 
     onAddExpense(newExpense);
 
-    // Réinitialiser les champs
     setTitle("");
     setAmount("");
     setDate("");
@@ -43,13 +44,20 @@ export default function ExpenseForm({ onAddExpense }) {
           min="0"
           step="0.01"
         />
-        <input
-          type="text"
-          placeholder="Catégorie"
+
+        <select
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="border px-4 py-2 rounded-lg w-full"
-        />
+        >
+          <option value="">-- Choisir une catégorie --</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+
         <input
           type="date"
           value={date}
