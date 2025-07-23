@@ -3,16 +3,17 @@ import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
 import ExpenseChart from "./components/ExpenseChart";
 import Login from "./components/Login";
+import Register from "./components/Register";
 import "./index.css";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const [expenses, setExpenses] = useState(() => {
     const savedExpenses = localStorage.getItem("expenses");
     return savedExpenses ? JSON.parse(savedExpenses) : [];
   });
 
-  // Sauvegarder les dépenses dans localStorage quand elles changent
   useEffect(() => {
     localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
@@ -28,7 +29,17 @@ function App() {
   };
 
   if (!isLoggedIn) {
-    return <Login onLogin={() => setIsLoggedIn(true)} />;
+    return showRegister ? (
+      <Register
+        onRegister={() => setShowRegister(false)}
+        onSwitchToLogin={() => setShowRegister(false)}
+      />
+    ) : (
+      <Login
+        onLogin={() => setIsLoggedIn(true)}
+        onSwitchToRegister={() => setShowRegister(true)}
+      />
+    );
   }
 
   return (
@@ -38,7 +49,6 @@ function App() {
         <button
           onClick={handleLogout}
           className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition"
-          aria-label="Se déconnecter"
         >
           Déconnexion
         </button>
