@@ -41,17 +41,28 @@ npm run test
 ## Structure de mon projet:
 MiniBudget/
 ├── src/
-│   ├── components/         # Composants de React
+│   ├── components/
+│   │   |                # Composants liés à l'authentification
+│   │   │── Login.jsx
+│   │   │── Register.jsx
 │   │   ├── ExpenseForm.jsx
 │   │   ├── ExpenseList.jsx
 │   │   └── ExpenseChart.jsx
-│   ├── App.jsx             #le fichier principal
-│   ├── main.jsx            # Entrée React
-│   └── index.css           # Styles (Tailwind)
-├── tests/                  # Test des fichiers
+│   ├── App.jsx                 # Fichier principal React
+│   ├── main.jsx                # Point d'entrée React (render)
+│   └── index.css               # Styles globaux (Tailwind)
+|     
+│                 
+│  
+│──__tests__ /      
+│       ├── ExpenseForm.test.jsx
+│       ├── ExpenseList.test.jsx
+│       |── ExpenseChart.test.jsx               # Tests unitaires, etc.    
+|       |── App.test.jsx
 ├── vite.config.js
 ├── package.json
 └── README.md
+
 
 ## Licence:
 Ce projet est open source et disponible sous la licence MIT(Massachusetts Institute of Technology, en français Institut de technologie du Massachusetts).
