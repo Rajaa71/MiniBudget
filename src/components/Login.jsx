@@ -1,11 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Login({ onLogin, onSwitchToRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isForgot, setIsForgot] = useState(false);
-  const [generatedCode, setGeneratedCode] = useState("");
   const [enteredCode, setEnteredCode] = useState("");
+  const [step, setStep] = useState("code"); // "code" ou "reset"
+  const [newPassword, setNewPassword] = useState("");
+
+  useEffect(() => {
+    return () => {
+      localStorage.removeItem("resetCode");
+      localStorage.removeItem("resetEmail");
+    };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,27 +37,55 @@ export default function Login({ onLogin, onSwitchToRegister }) {
     }
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setGeneratedCode(code);
+    localStorage.setItem("resetCode", code);
+    localStorage.setItem("resetEmail", email);
     setIsForgot(true);
+    setStep("code");
     alert(`Un code a été envoyé à ${email} : ${code}`);
   };
 
   const handleCodeSubmit = (e) => {
     e.preventDefault();
-    if (enteredCode === generatedCode) {
-      alert("✅ Code vérifié avec succès !");
-      setIsForgot(false);
-      setEnteredCode("");
+    const storedCode = localStorage.getItem("resetCode");
+
+    if (enteredCode === storedCode) {
+      alert("✅ Code vérifié. Veuillez saisir un nouveau mot de passe.");
+      setStep("reset");
     } else {
       alert("❌ Code incorrect. Réessaye.");
     }
+  };
+
+  const handlePasswordReset = (e) => {
+    e.preventDefault();
+    const emailToUpdate = localStorage.getItem("resetEmail");
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const updatedUsers = users.map((user) =>
+      user.email === emailToUpdate ? { ...user, password: newPassword } : user
+    );
+
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    alert("🔑 Mot de passe mis à jour avec succès ! Vous pouvez vous connecter.");
+    setIsForgot(false);
+    setEnteredCode("");
+    setNewPassword("");
+    setEmail("");
+    setPassword("");
+
+    localStorage.removeItem("resetCode");
+    localStorage.removeItem("resetEmail");
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">
-          {isForgot ? "Vérification du code" : "Se connecter"}
+          {isForgot
+            ? step === "code"
+              ? "Vérification du code"
+              : "Nouveau mot de passe"
+            : "Se connecter"}
         </h2>
 
         {!isForgot ? (
@@ -101,11 +137,12 @@ export default function Login({ onLogin, onSwitchToRegister }) {
               </button>
             </div>
           </>
-        ) : (
+        ) : step === "code" ? (
           <>
             <form onSubmit={handleCodeSubmit} className="space-y-4">
               <p className="text-sm text-gray-600">
-                Un code a été envoyé à <strong>{email}</strong>. Entrez-le ci-dessous :
+                Un code a été envoyé à{" "}
+                <strong>{localStorage.getItem("resetEmail")}</strong>. Entrez-le :
               </p>
               <input
                 type="text"
@@ -128,16 +165,39 @@ export default function Login({ onLogin, onSwitchToRegister }) {
                 ⬅ Retour à la connexion
               </button>
             </form>
-
-            <div className="text-center mt-6 text-sm">
-              <span>Pas encore de compte ? </span>
+          </>
+        ) : (
+          <>
+            <form onSubmit={handlePasswordReset} className="space-y-4">
+              <p className="text-sm text-gray-600 mb-2">
+                Entrez un nouveau mot de passe pour{" "}
+                <strong>{localStorage.getItem("resetEmail")}</strong> :
+              </p>
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Nouveau mot de passe"
+              />
               <button
-                onClick={onSwitchToRegister}
-                className="text-blue-600 hover:underline"
+                type="submit"
+                className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
               >
-                Créer un compte
+                Réinitialiser le mot de passe
               </button>
-            </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsForgot(false);
+                  setStep("code");
+                }}
+                className="w-full text-sm text-gray-600 hover:underline mt-2"
+              >
+                ⬅ Retour à la connexion
+              </button>
+            </form>
           </>
         )}
       </div>
